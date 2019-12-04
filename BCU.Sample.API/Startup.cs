@@ -20,18 +20,33 @@ namespace BCU.Sample.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IComponent component) //IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app) //IHostingEnvironment env)
         {
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
-
-            app.Run(async (context) =>
+            app.Use(async (context, next) =>
             {
-                //This is a comment for Github sync purposes.
-                await context.Response.WriteAsync($"Name is {component.Name}");
+                if (context.Request.Path == "/foo")
+                {
+                    await context.Response.WriteAsync($"Welcome to Foo");
+                }
+                else
+                {
+                    await next();
+                }
             });
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path == "/bar")
+                {
+                    await context.Response.WriteAsync($"Welcome to Bar");
+                }
+                else
+                {
+                    await next();
+                }
+            });
+            app.Run(async (context) =>
+                await context.Response.WriteAsync($"Welcome to the default")
+            );
         }
     }
 }
