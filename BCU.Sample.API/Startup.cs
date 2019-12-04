@@ -29,6 +29,7 @@ namespace BCU.Sample.API
 
             app.Run(async (context) =>
             {
+                //This is a comment for Github sync purposes.
                 await context.Response.WriteAsync($"Name is {component.Name}");
             });
         }
